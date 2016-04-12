@@ -1,0 +1,92 @@
+<{if $subject}>
+
+	For noget tid siden købte du ...
+
+<{else}>
+
+	<html>
+
+	<head>
+		<title>For noget tid siden købte du ...</title>
+		<style type="text/css">
+			body {
+				font-family:sans-serif;
+			}
+			a {
+				color:#00a;
+				text-decoration:none;
+			}
+			h2 {
+				margin:0px 0px 10px 0px;
+				padding:0px;
+			}
+			.left {
+				float:left;
+				margin-right:25px;
+				border:1px solid #aaa;
+				padding:10px;
+				min-width:200px;
+				text-align:center;
+			}
+			.clear {
+				clear:both;
+			}
+		</style>
+	</head>
+
+	<body>
+
+	<p>Hej <{$order->getOrderName()|escape}>,</p>
+
+	<p>For noget tid siden købte du:</p>
+
+	<{assign var="products" value=$order->getProducts()}>
+
+	<{section name="i" loop=$products}>
+
+		<div class="left">
+
+			<a href="<{$webshop->getUrl()|escape}>/<{$products[i]->getUrl()|escape}>">
+				<{assign var="image" value=$products[i]->getImage()}>
+
+				<h2><{$products[i]->getName()|escape}></h2>
+
+				<{if $image}>
+					<img src="<{$webshop->getUrl()|escape}>/<{$image->getSrc(200, 100, 'fit')}>" alt="<{$image->getDescription()|escape}>" title="<{$image->getDescription()|escape}>" <{$image->getHtmlSize(200, 100, 'fit')}>/>
+				<{/if}>
+			</a>
+
+		</div>
+
+	<{/section}>
+
+	<div class="clear"></div>
+
+	<p>Derfor tænkte vi at det måske kunne være interessant med:</p>
+
+		<{assign var="loop" value=$webshop->getAfterPurchase($products)}>
+
+		<{section name="i" loop=$loop}>
+
+			<div class="left">
+
+				<a href="<{$webshop->getUrl()|escape}>/<{$loop[i]->getUrl()|escape}>">
+					<{assign var="image" value=$loop[i]->getImage()}>
+
+					<h2><{$loop[i]->getName()|escape}></h2>
+
+					<{if $image}>
+						<img src="<{$webshop->getUrl()|escape}>/<{$image->getSrc(200, 100, 'fit')}>" alt="<{$image->getDescription()|escape}>" title="<{$image->getDescription()|escape}>" <{$image->getHtmlSize(200, 100, 'fit')}>/>
+					<{/if}>
+				</a>
+
+			</div>
+
+		<{/section}>
+
+
+	</body>
+
+	</html>
+
+<{/if}>

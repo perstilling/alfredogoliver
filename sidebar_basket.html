@@ -1,0 +1,46 @@
+                <div id="basket">
+                    <div class="top"></div>
+                    <div class="middle">
+                        <h1>Indkøbskurv</h1>
+                        <{section name="i" loop=$basket}>
+							<{assign var="product" value=$basket[i].product}>
+                            <div class="item">
+                                <div class="name">
+                                    <{$basket[i].amount}> stk. <{$product->getName()}>
+                                	<{assign var="attributes" value=$basket[i].attributes}>
+									<{if $attributes}>
+                                    	<{foreach from=$attributes item=a}>
+                                        	 - <{$a.value|escape}>
+                                        <{/foreach}>
+                                    <{/if}>
+                                </div>
+                                <div class="price">
+                                    <{$product->getRealPrice($basket[i].amount)|number_format:0:",":"."}>,-
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        <{/section}>
+                        <hr class="sidebar" />
+                        <div class="item">
+                            <div class="name">
+                                Fragt
+                            </div>
+                            <div class="price">
+                                <{$shipping_price|number_format:0:",":"."}>,-
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <hr class="sidebar" />
+                        <div class="item">
+                            <div class="name strong">
+                                Total
+                            </div>
+                            <div class="price strong">
+                                <{$total_price|number_format:0:",":"."}>,-
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <a href="<{$webshop->getUrl()}>/basket">Gå til kurv</a>
+                    </div>
+                    <div class="bottom"></div>
+                </div>

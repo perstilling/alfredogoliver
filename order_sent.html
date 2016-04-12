@@ -1,0 +1,61 @@
+<html>
+
+<head>
+	<title>Din ordre er sendt</title>
+	<style type="text/css">
+		body {
+		}
+	</style>
+</head>
+
+<body>
+	
+	<h1>Din ordre er sendt</h1>
+	
+	<{if $order->getTrackingNumber()}>
+		<{assign var="shipping" value=$order->getShipping()}>
+		<p><a href="<{$order->getTrackingUrl()|escape}>" target="_blank">Følg din ordre hos <{$shipping->getName()|escape}></a>.</p>
+	<{/if}>
+	
+	<h2>Ordreoplysninger</h2>
+
+	<h3>Varer</h3>
+	<{assign var="products" value=$order->getProducts()}>
+
+	<ul>
+		<{section name="i" loop=$products}>
+			<li>
+				<strong><{$products[i]->getAmount()}> stk. <{$products[i]->getName()|escape}></strong>
+				<{assign var="attributes" value=$products[i]->getAttributes()}>
+				<{if $attributes}>
+					<ul>
+						<{section name="j" loop=$attributes}>
+							<li><{$attributes[j].name}>: <{$attributes[j].val}></li>
+						<{/section}>
+					</ul>
+				<{/if}>
+			</li>
+		<{/section}>
+	</ul>
+	<br/>
+
+	<h3>Pris</h3>
+	<p><{$order->getPrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}></p>
+	<br/>
+
+	<h3>Bestillingsadresse</h3>
+	<p><{$order->getOrderName()|escape}></p>
+	<p><{$order->getOrderAddress()|escape}></p>
+	<p><{$order->getOrderZipcode()|escape}> <{$order->getOrderCity()|escape}></p>
+	<p><{$order->getOrderCountry()|escape}></p>
+	<br/>
+
+	<h3>Leveringsadresse</h3>
+	<p><{$order->getDelName()|escape}></p>
+	<p><{$order->getDelAddress()|escape}></p>
+	<p><{$order->getDelZipcode()|escape}> <{$order->getDelCity()|escape}></p>
+	<p><{$order->getDelCountry()|escape}></p>	
+	
+</body>
+
+</html>

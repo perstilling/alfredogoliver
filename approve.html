@@ -1,0 +1,52 @@
+<h1>Godkend ordre</h1>
+
+<form action="" method="post">
+	<h3>E-mail-adresse</h3>
+	<p><{$session_order.email|escape}></p>
+
+	<br/>
+
+	<h3>Faktureringsadresse</h3>
+	<p><{$session_order.name|escape}><br/>
+	<{$session_order.address|escape}><br/>
+	<{$session_order.zipcode|escape}> <{$session_order.city|escape}><br/>
+	<{$session_order.country_name|escape}><p>
+
+	<br/>
+
+	<h3>Leveringsadresse</h3>
+	<p><{$session_del.name|escape}><br/>
+	<{$session_del.address|escape}><br/>
+	<{$session_del.zipcode|escape}> <{$session_del.city|escape}><br/>
+	<{$session_del.country_name|escape}><p>
+
+	<{if $shipping}>
+		<br/>
+		<h3>Leveringsmetode</h3>
+		<p><{$shipping->getName()|escape}> (<{$shipping->getCost()|number_format:2:",":"."}> <{$webshop->getCurrency()}>)<p>
+	<{/if}>
+
+	<br/>
+
+	<h3>Din bestilling</h3>
+	<{section name="i" loop=$basket}>
+		<{assign var="product" value=$basket[i].product}>
+
+		<p><{$basket[i].amount}> stk. <{$product->getName()}>
+			<{assign var="attributes" value=$basket[i].attributes}>
+			<{if $attributes}>
+				<small>
+					(<{foreach from=$attributes item=a name="loop"}><{$a.name|escape}>: <{$a.value|escape}><{if !$smarty.foreach.loop.last}> &middot; <{/if}><{/foreach}>)
+				</small>
+			<{/if}>
+		</p>
+	<{/section}>
+
+	<br/>
+
+	<h3>Pris inkl. levering:</h3>
+	<p><{$total_price|number_format:2:",":"."}> <{$webshop->getCurrency()}></p>
+
+	<input type="button" name="prev" value="&laquo; Fragt" onclick="history.go(-1);"/>
+	<input type="submit" name="next" value="Gå til betaling &raquo;" class="ok"/>
+</form>

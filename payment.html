@@ -1,0 +1,85 @@
+<p class="breadcrumb">Indkøbskurv &nbsp;&rsaquo;&nbsp; Leveringsadresse &nbsp;&rsaquo;&nbsp; <span class="strong">Betaling</span> &nbsp;&rsaquo;&nbsp; Bekræftelse</p>
+<h1>Betaling</h1>
+
+<{if $webshop->getStatus() == "demo"}>
+
+	<p class="error">Shoppen kører i demo-mode, så evt. betalinger går igennem som betalt.</p>
+	<br/>
+
+	<form action="<{$webshop->getUrl()|escape}>/payment?order_id=<{$order->getOrderId()}>&email=<{$order->getEmail()|escape}>" method="post">
+
+		<p>Du er ved at betale <{$order->getTotalPrice()|number_format:2:",":"."}>,-</p><br/>
+
+		<input type="submit" name="next" value="Lad som om du betaler &raquo;" class="ok"/>
+	</form>
+
+<{else}>
+
+	<{if $webshop->getPaymentModule() == "epay"}>
+
+		<script type="text/javascript" src="https://ssl.ditonlinebetalingssystem.dk/integration/ewindow/paymentwindow.js" charset="UTF-8"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				paymentwindow = new PaymentWindow({
+					<{foreach from=$params key="key" item="value"}>
+						'<{$key}>': '<{$value|escape:"javascript"}>',
+					<{/foreach}>
+					<{if $hash}>
+						'hash': '<{$hash|escape:"javascript"}>'
+					<{/if}>
+				});
+				paymentwindow.append('payment-div');
+				paymentwindow.open();
+			});
+		</script>
+
+		<div id="payment-div" style="width:650px; height:300px; background: url(<{$theme_url|escape}>/images/padlock.png) 100% 100% no-repeat">
+		</div>
+
+	<{elseif $webshop->getPaymentModule() == "quickpay"}>
+
+		<form action="https://secure.quickpay.dk/form/" method="post">
+			<input type="hidden" name="protocol" value="<{$protocol|escape}>" />
+			<input type="hidden" name="msgtype" value="<{$msgtype|escape}>" />
+			<input type="hidden" name="merchant" value="<{$merchant|escape}>" />
+			<input type="hidden" name="language" value="<{$language|escape}>" />
+			<input type="hidden" name="ordernumber" value="<{$ordernumber|escape}>" />
+			<input type="hidden" name="amount" value="<{$amount|escape}>" />
+			<input type="hidden" name="currency" value="<{$currency|escape}>" />
+			<input type="hidden" name="continueurl" value="<{$continueurl|escape}>" />
+			<input type="hidden" name="cancelurl" value="<{$cancelurl|escape}>" />
+			<input type="hidden" name="callbackurl" value="<{$callbackurl|escape}>" />
+
+			<input type="hidden" name="md5check" value="<{$md5}>" />
+			<input type="submit" value="Betal" />
+		</form>
+
+	<{elseif $webshop->getPaymentModule() == "paypal"}>
+
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+
+		    <input type="hidden" name="amount" value="<{$amount|escape}>"/>
+			<input type="hidden" name="item_name" value="Ordre nr. <{$ordernumber|escape}> fra <{$webshop->getName()|escape}>"/>
+			<input type="hidden" name="business" value="<{$merchant|escape}>"/>
+			<input type="hidden" name="notify_url" value="<{$callbackurl|escape}>"/>
+
+			<input type="hidden" name="currency_code" value="<{$currency|escape}>"/>
+
+			<input type="hidden" name="custom " value="<{$ordernumber|escape}>"/>
+		    <input type="hidden" name="return" value="<{$continueurl|escape}>"/>
+
+			<!--
+				<input type="hidden" name="image_url" value=""/>
+				<input type="hidden" name="cpp_headerback_color" value=""/>
+				<input type="hidden" name="cpp_payflow_color" value=""/>
+				<input type="hidden" name="cpp_headerborder_color" value=""/>
+			-->
+
+			<input type="hidden" name="cmd" value="_xclick"/>
+
+			<input type="submit" class="payment_button green" value="Betal"/>
+		</form>
+
+	<{/if}>
+
+<{/if}>

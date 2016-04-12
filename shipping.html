@@ -1,0 +1,72 @@
+<h1>Fragt</h1>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		var check_module = function() {
+
+			// Gemmer alle
+			$(".shipping_module").hide();
+
+			// Finder den der er checked
+			var e = $("input[type=radio].shipping:checked");
+
+			if (e) {
+				var module_name = e.attr('module');
+
+				// Hvis den der er checked også har en module-attribut, så viser vi den
+				if (module_name) {
+					var module = $("#shipping_module").show();
+				}
+			}
+
+		}
+
+		// Loader
+		$("input.shipping").ready(check_module).change(check_module);
+	});
+</script>
+
+<{if $get.missing}>
+	<p class="error">Du skal vælge leveringsmetode</p>
+<{/if}>
+
+<{if $is_postdanmark_down_again}>
+	<p class="error">PostDanmark er desværre ikke tilgængelig i øjeblikket.</p>
+<{/if}>
+
+<{if $shipping_module && $no_shops}>
+	<p>Vi fandt desværre ikke nogen pakkeshop - er du sikker på at din adresse er rigtig?</p>
+	<p><a href="<{$webshop->getUrl()}>/address"/>&laquo; gå tilbage og ret</a></p>
+<{/if}>
+
+<form action="" method="post">
+	<{assign var="shippings" value=$webshop->getShippings()}>
+	<{section name="i" loop=$shippings}>
+		<div class="line">
+			<input class="shipping" type="radio" module="<{$shippings[i]->getModule()|escape}>" value="<{$shippings[i]->getShippingId()}>" name="shipping_id" id="shipping<{$shippings[i]->getShippingId()}>" <{if $session_del.shipping_id == $shippings[i]->getShippingId()}>checked="checked"<{/if}>/>
+			<label for="shipping<{$shippings[i]->getShippingId()}>"><{$shippings[i]->getName()|escape}> <{$shippings[i]->getCost()|number_format:2:",":"."}> <{$webshop->getCurrency()}></label><br/>
+		</div>
+	<{/section}>
+
+	<{if $shops}>
+		<div class="shipping_module clear" id="shipping_module">
+			<label>Hvor vi du hente din pakke?
+				<select name="shop">
+					<{section name="i" loop=$shops}>
+						<option value="<{$shops[i].number}>" <{if $session_del.shop == $shops[i].number}>selected="selected"<{/if}>/>
+							<{$shops[i].name|escape}> &middot;
+							<{$shops[i].street|escape}> &middot;
+							<{$shops[i].zip|escape}> <{$shops[i].city|escape}>
+						</option>
+					<{/section}>
+				</select>
+			</label>
+		</div>
+	<{/if}>
+
+	<div class="clear"></div>
+
+	<input type="button" name="prev" value="&laquo; Leveringsadresse" onclick="history.go(-1);"/>
+	<input type="submit" name="next" value="Gå til godkendelse &raquo;"/>
+</form>

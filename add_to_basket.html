@@ -1,0 +1,83 @@
+<form action="" method="post">
+	<input type="hidden" name="product_id" value="<{$product->getProductId()}>"/>
+	<input type="hidden" name="redirect" value="<{$product->getMetaValue('redirect')|escape}>"/>
+	<{assign var="profile" value=$product->getProfile()}>
+	<{assign var="attr" value=$profile->getAttributeList()}>
+    <div id="buy_info">
+    	<{*
+			Størrelsen er <strong><{attr name="Størrelse"}></strong>
+			<{capture name="x"}><{attr name="Størrelse"}><{/capture}>
+			<{if $smarty.capture.x}>Ja da<{/capture}>
+			<{if_attr name="Størrelse"}>
+				JA!
+			<{/if_attr}>
+			<{if_not_attr name="Størrelse"}>
+				NEJ!
+			<{/if_not_attr}>
+		*}>
+        
+        
+        
+        <{section name="j" loop=$attr}>
+            <div>
+                <{if $attr[j]->getIsVariant()}>
+                	<{if $attr[j]->getDataType() == "valuelist"}>
+                    	<{assign var="values" value=$attr[j]->getValues()}>
+                        <select name="attributes[<{$attr[j]->getAttributeId()}>]" id="a<{$attr[j]->getAttributeId()}>" class="attribute required" required>
+                                <{section name="k" loop=$values}>
+                                    <{assign var="attribute_price" value=$product->getAttributePrice($values[k]->getAttributeValueId())}>
+                                    <{if $product->getInStock($attr[j]->getAttributeId(), $values[k]->getAttributeValueId())}>
+                                    	<option value="<{$values[k]->getAttributeValueId()}>">
+                                            <{$values[k]->getVal()|escape}>
+                                            <{if $attribute_price}>
+                                                [<{$attribute_price|number_format:2:",":"."}> <{$webshop->getCurrency()}>]
+                                            <{/if}>
+    
+                                            (<{$product->getInStock($attr[j]->getAttributeId(), $values[k]->getAttributeValueId())}> på lager)
+    
+                                            <{*
+                                                (SKU: <{$product->getOwnId($values[k]->getAttributeValueId())}>)
+                                            *}>
+                                        </option>
+                                    <{/if}>
+                                <{/section}>
+                        </select>
+                    <{elseif $attr[j]->getDataType() == "string"}>
+						<input type="text" name="attributes[<{$attr[j]->getAttributeId()}>]" id="a<{$attr[j]->getAttributeId()}>" class="attribute"/>
+					<{elseif $attr[j]->getDataType() == "integer"}>
+						<input type="text" name="attributes[<{$attr[j]->getAttributeId()}>]" id="a<{$attr[j]->getAttributeId()}>" class="attribute"/>
+					<{elseif $attr[j]->getDataType() == "boolean"}>
+						<input type="checkbox" name="attributes[<{$attr[j]->getAttributeId()}>]" value="1" id="a<{$attr[j]->getAttributeId()}>" class="attribute"/>
+					<{/if}>
+                <{else}>
+                	<div>
+                        <strong><{$attr[j]->getName()|escape}>:</strong>
+                        <{if $attr[j]->getDataType() == "currencyvalue"}>
+                        <{elseif $attr[j]->getDataType() == "valuelist"}>
+                            <{$product->getAttributeValue($attr[j]->getAttributeId())}>
+                        <{elseif $attr[j]->getDataType() == "string"}>
+                            <{$product->getAttributeValue($attr[j]->getAttributeId())}>
+                        <{elseif $attr[j]->getDataType() == "integer"}>
+                            <{$product->getAttributeValue($attr[j]->getAttributeId())}>
+                        <{elseif $attr[j]->getDataType() == "floatingpoint"}>
+                            <{$product->getAttributeValue($attr[j]->getAttributeId())}>
+                        <{elseif $attr[j]->getDataType() == "datetime"}>
+                            <{$product->getAttributeValue($attr[j]->getAttributeId())}>
+                        <{elseif $attr[j]->getDataType() == "boolean"}>
+                            <{if $product->getAttributeValue($attr[j]->getAttributeId())}>Ja<{else}>Nej<{/if}>
+                        <{/if}>
+					</div>
+					<div class="clear"></div>
+				<{/if}>
+            </div>
+		<{/section}>
+            <div>
+                <div id="units">
+                    <input type="text" name="amount" value="1" />
+                </div>
+                <div id="basket_btn">
+                    <input type="submit" value="Tilføj til indkøbskurv &nbsp;&rsaquo;" class="button" />
+                </div>
+            </div>
+    </div>
+</form>

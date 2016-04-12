@@ -1,0 +1,92 @@
+<script type="text/javascript" src="<{$baseurl}>/javascript/names_and_genders.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("input[name='order_name']").blur(function() {
+			var first_name = $("input[name='order_name']").val().split(" ")[0];
+			
+			for(var i=0; i<name_and_genders.length; i++) {
+				if (name_and_genders[i] == first_name) {
+					var _gaq = _gaq || [];
+					_gaq.push(['_setCustomVar', 1, 'Koen', 'Mand', 1]);
+					break;
+				}
+			}
+
+		});
+	});
+</script>
+
+<script type="text/javascript" src="<{$baseurl}>/javascript/validate_form.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$("#copy").click(function() {
+			if ($(this).attr("checked")) {
+
+				$("form .required").each(function(index, e) {
+					var element = $(e);
+					var id = element.attr("id");
+
+					if (id.split("_")[0] == "order") {
+						$("#del" + id.substr(5)).val(element.val());
+					}
+
+				});
+
+			}
+		});
+
+	});
+</script>
+            	<div class="one_col">
+                    <p class="breadcrumb">Indkøbskurv &nbsp;&rsaquo;&nbsp; <span class="strong">Leveringsadresse</span> &nbsp;&rsaquo;&nbsp; Betaling &nbsp;&rsaquo;&nbsp; Bekræftelse</p>
+                    <form action="" method="post" onsubmit="return validateForm();">
+                    <div id="two_col">
+                    	<div id="paymentaddress">
+                    		<h1>Kontaktoplysninger:</h1>
+                            <label for="e-mail">E-mail:<br /><input type="email" name="email" value="<{$session_order.email|escape}>" id="email" class="required input" required /></label>
+                            <label for="order_name">Navn:<br /><input type="text" name="order_name" value="<{$session_order.name|escape}>" id="order_name" class="required input" required /></label>
+                            <label for="phone">Telefonnummer:<br /><input type="text" name="phone" value="<{$session_order.phone|escape}>" id="phone" class="input" /></label>
+                            <{if $settings.basket.incl_newsletter == "yes"}>
+                            	<label id="checkbox" for="mailinglist"><input type="checkbox" name="mailinglist" id="mailinglist" <{if $join_mailinglist}>checked="checked"<{/if}> value="1" checked="checked" /> Tilmeld mig nyhedsbrevet.</label>
+                            <{/if}>
+                            <button name="prev" onclick="history.go(-1);">&lsaquo;&nbsp; Tilbage til kurv</button>
+                        </div>
+                        <div id="deliveryaddress">
+                        	<h1>Leveringsadresse:</h1>
+                            <{if $get.missing_address}>
+                                <p>Mangler adresse</p>
+                            <{/if}>
+                            <label for="order_address">Adresse:<br /><input type="text" name="order_address" value="<{$session_order.address|escape}>" id="order_address" class="required input" required /></label>
+                            <label for="order_zipcode">Postnummer:<br /><input type="text" name="order_zipcode" value="<{$session_order.zipcode|escape}>" id="order_zipcode" class="required input" required /></label>
+                            <label for="order_city">By:<br /><input type="text" name="order_city" value="<{$session_order.city|escape}>" id="order_city" class="required input" required /></label>
+                            <label id="checkbox"><input type="checkbox" name="checkbox" value="value" required="required" /> Jeg accepterer handelsbetingelserne.</label>
+                            <input type="submit" name="next" value="Videre til betaling &nbsp;&rsaquo;" class="ok button"/>
+                            <{assign var="countries" value=$webshop->getCountries()}>
+                            <{if $countries}>
+                            	<div style="display:none;">
+                                    <label for="order_country_id">Land</label>
+                                    <select id="order_country_id" name="order_country_id" class="required" required>
+                                        <{section name="i" loop=$countries}>
+                                            <option value="<{$countries[i]->getCountryId()}>" <{if $session_order.country_id == $countries[i]->getCountryId()}>selected="selected"<{/if}>><{$countries[i]->getName()|escape}></option>
+                                        <{/section}>
+                                    </select>
+                                </div>
+                                <div class="clear"></div>
+                            <{/if}>
+                            <{assign var="shippings" value=$webshop->getShippings()}>
+                            <{if $shippings}>
+                                <{section name="i" loop=$shippings}>
+                                    <div class="line" style="display:none;">
+                                        <input type="radio" value="<{$shippings[i]->getShippingId()}>" checked="checked" name="shipping_id" id="shipping<{$shippings[i]->getShippingId()}>" <{if $session_del.shipping_id == $shippings[i]->getShippingId()}>checked="checked"<{/if}>/>
+                                        <label for="shipping<{$shippings[i]->getShippingId()}>"><{$shippings[i]->getName()|escape}> <{$shippings[i]->getCost()|number_format:2:",":"."}> <{$webshop->getCurrency()}></label><br/>
+                                    </div>
+                                <{/section}>
+                                <div class="clear"></div>
+                                <input type="hidden" name="skip_next" value="true"/>
+                            <{/if}>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    </form>
+                </div>

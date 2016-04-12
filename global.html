@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title><{if $meta_title}><{$meta_title|escape}><{elseif $smarty.capture.title}><{$smarty.capture.title|escape}><{else}><{$webshop->getName()|escape}><{/if}></title>
+    <{if $noindex}>
+		<meta name="robots" content="noindex, follow">
+	<{/if}>
+	<{if $meta_description}>
+		<meta name="description" content="<{$meta_description|escape}>">
+	<{/if}>
+	<{if $canonical}>
+        <link rel="canonical" type="text/html" href="<{$canonical|escape}>"/>
+    <{/if}>
+    <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,600,900,700,300,400italic,600italic,700italic,300italic,200italic,200' rel='stylesheet' type='text/css' />
+	<link href="<{$theme_url}>/style/stylesheet.css" rel="stylesheet" type="text/css" />
+	<link href="<{$theme_url}>/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <script type="text/javascript" src="<{$theme_url}>/javascript/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="<{$theme_url}>/javascript/jquery.lightbox-0.5.pack.js"></script>
+	<script type="text/javascript" src="<{$theme_url}>/javascript/jquery.follow.js"></script>
+	<script type="text/javascript" src="<{$theme_url}>/javascript/dk.zipcodes.js"></script>
+	
+	<link rel="stylesheet" href="<{$baseurl}>/design/css/jquery.lightbox-0.5.css" type="text/css"/>
+	<script type="text/javascript">
+		var webshop_url = '<{$webshop->getUrl()|escape:"javascript"}>';
+		$(document).ready(function() {
+			$(".follow").follow({margin_top:25});
+			$('a[rel=lightbox]').lightBox({
+				overlayBgColor: '#000',
+				overlayOpacity: 0.8,
+				imageLoading: '<{$baseurl}>/design/img/lightbox-ico-loading.gif',
+				imageBtnClose: '<{$baseurl}>/design/img/lightbox-btn-close.gif',
+				imageBtnPrev: '<{$baseurl}>/design/img/lightbox-btn-prev.gif',
+				imageBtnNext: '<{$baseurl}>/design/img/lightbox-btn-next.gif',
+				imageBlank: '<{$baseurl}>/design/img/lightbox-blank.gif',
+				containerResizeSpeed: 350,
+				keyToClose:'escape',
+				txtImage: 'Billede',
+				txtOf: 'af'
+			});
+		});
+	</script>
+	<{if $webshop->getGaId()}>
+		<script type="text/javascript">
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', '<{$webshop->getGaId()}>']);
+		  _gaq.push(['_trackPageview']);
+
+		  (function() {
+		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+		</script>
+	<{/if}>
+</head>
+<body>
+
+<div id="wrapper">
+	<div id="header">
+
+		<{if $settings.images.logo}>
+    		<div id="logo"><a href="/"><img src="<{$settings.images.logo->getSrc(200, 65, 'fit')}>" border="0" /></a></div>
+		<{/if}>
+
+        <div id="benefits">
+        	<ul>
+            	<li class="benefit1">2-3 dages leveringstid</li>
+                <li class="benefit2">Sikker betaling</li>
+            </ul>
+            <ul>
+                <li class="benefit3">14 dages fuld returret</li>
+                <li class="benefit4">Support: <{$settings.top.phone|escape}></li>
+            </ul>
+        </div>
+    </div>
+    <div id="mainNav">
+    	<div id="list">
+            <ul>
+            	<li><a href="/">Forside</a></li>
+                    <{assign var="pages" value=$webshop->getPages()}>
+                    <{section name="i" loop=$pages}>
+                        <{if !$pages[i]->getMetaValue("hidden")=="yes"}>
+                            <li><a href="<{$pages[i]->getUrl()|escape}>"><{$pages[i]->getHeadline()|escape}></a></li>
+                        <{/if}>
+                    <{/section}>
+            </ul>
+        </div>
+        <div id="search">
+        	<form action="<{$webshop->getUrl()|escape}>/search">
+                <input type="text" class="input" name="search" value="<{$get.search|escape}>" placeholder="Søg efter en vare.." required />
+                <input type="submit" class="submit" value=" " />
+            </form>
+        </div>
+    </div>
+    <div id="main">
+    	<{if ($category && $category->isFront()) || $page || $product}>
+        <div id="content">
+        	<div class="top"></div>
+            <div class="middle">
+            	<{$contents}>
+            </div>
+            <div class="bottom"></div>
+            <div id="footer">
+        		Gratis shoporama tema udviklet af Kenneth Hedegaard - <a href="http://www.kennethhedegaard.com/" target="_blank">www.kennethhedegaard.com</a>
+        	</div>
+        </div>
+        <div id="sidebar">
+        	<{include file="sidebar.html"}>
+        </div>
+        <div class="clear"></div>
+        <{elseif $inc}>
+        <div id="content">
+        	<div class="top"></div>
+            <div class="middle">
+            	<{$contents}>
+            </div>
+            <div class="bottom"></div>
+            <div id="footer">
+        		Gratis shoporama tema udviklet af Kenneth Hedegaard - <a href="http://www.kennethhedegaard.com/" target="_blank">www.kennethhedegaard.com</a>
+        	</div>
+        </div>
+        <div id="sidebar">
+        	<{include file="sidebar.html"}>
+        </div>
+        <div class="clear"></div>
+        <{else}>
+        <div id="content">
+        	<div class="top"></div>
+            <div class="middle">
+            	<{$contents}>
+            </div>
+            <div class="bottom"></div>
+            <div id="footer">
+        		Gratis shoporama tema udviklet af Kenneth Hedegaard - <a href="http://www.kennethhedegaard.com/" target="_blank">www.kennethhedegaard.com</a>
+        	</div>
+        </div>
+        <div id="sidebar">
+        	<{include file="sidebar.html"}>
+        </div>
+        <div class="clear"></div>
+        <{/if}>
+    </div>
+</div>
+</body>
+</html>

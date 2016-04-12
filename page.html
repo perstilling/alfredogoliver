@@ -1,0 +1,36 @@
+<{capture name="title"}><{$page->getHeadline()}><{/capture}>
+
+<div class="one_col">
+	<h1><{$page->getHeadline()|escape}></h1>
+	<p><{$page->getText()}></p>
+
+	<{if $get.mail}>
+
+		<p>Tak for din mail</p>
+
+	<{else}>
+
+	<{if $page->getMetaValue("is_contact")}>
+
+		<form method="post">
+			<input type="hidden" name="subject" value="Jeg vil gerne vide mere ..."/>
+			
+			<label>Din besked<br/>
+				<textarea name="body" cols="60" rows="10"></textarea>
+			</label>
+			
+			<br/>
+
+			<label>
+				E-mail-adresse<br/>
+				<input type="email" name="sender"/>
+			</label>
+
+			<input type="submit" value="Send"/>
+		</form>
+
+		<{/if}>
+
+	<{/if}>
+
+</div>

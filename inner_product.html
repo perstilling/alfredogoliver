@@ -1,0 +1,15 @@
+<div class="product">
+	<{assign var="image" value=$product->getImage()}>
+	<{if $image}>
+		<a href="<{$product->getRemoteUrl()|escape}>">
+        	<div class="productPicThumb">
+				<img src="<{$image->getSrc(206, 206, 'box')}>" <{$image->getHtmlSize(206, 206, 'box')}> alt="<{$image->getDescription()|escape}>" title="<{$image->getDescription()|escape}>" />
+            </div>
+		</a>
+	<{/if}>
+
+	<h2><a href="<{$product->getRemoteUrl()|escape}>"><{$product->getName()|escape}></a></h2>
+	<p class="smallPrice"><a href="<{$product->getRemoteUrl()|escape}>"><{$product->getRealPrice()|number_format:0:",":"."}>,-</a></p>
+
+	<a href="<{$product->getRemoteUrl()|escape}>" class="buy_btn">Køb nu</a>
+</div>

@@ -1,0 +1,15 @@
+			<div id="categories">
+                <div class="top"></div>
+                <div class="middle">
+                    <h1>Kategorier</h1>
+                    <ul>
+                    	<{assign var="categories" value=$webshop->getCategories()}>
+						<{foreach from=$categories item="cat" name="i"}>
+							<{if $cat->getInMenu()}>
+                    			<li><a href="<{$cat->getUrl()|escape}>"><{$cat->getName()|escape}></a></li>
+							<{/if}>
+						<{/foreach}>
+                    </ul>
+                </div>
+                <div class="bottom"></div>
+            </div>

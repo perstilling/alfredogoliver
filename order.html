@@ -1,0 +1,94 @@
+<{if $order}>
+
+	<p class="right">Ordre ID: <{$order->getWebshopOrderId()}></p>
+
+	<h1>Din ordre</h1>
+
+	<{if $order->getStatus() == "new"}>
+
+		<p>Din ordre er ikke behandlet endnu.</p>
+
+	<{elseif $order->getStatus() == "cancelled"}>
+
+		<p>Din ordre er annulleret.</p>
+
+	<{elseif $order->getStatus() == "sent"}>
+
+		<p>Din ordre er afsendt.</p>
+
+		<{if $order->getTrackingNumber()}>
+			<{assign var="shipping" value=$order->getShipping()}>
+			<p><a href="<{$order->getTrackingUrl()|escape}>" target="_blank">Følg din ordre hos <{$shipping->getName()|escape}></a>.</p>
+		<{/if}>
+
+	<{/if}>
+
+	<br/>
+
+	<h2>Ordreoplysninger</h2>
+
+	<h3>Varer</h3>
+	<{assign var="products" value=$order->getProducts()}>
+
+	<ul>
+		<{section name="i" loop=$products}>
+			<li>
+				<strong><{$products[i]->getAmount()}> stk. <{$products[i]->getName()|escape}></strong>
+				<small><{$webshop->getCurrency()}> <{$products[i]->getUnitPrice()|number_format:2:",":"."}></small>
+
+				<{assign var="attributes" value=$products[i]->getAttributes()}>
+				<{if $attributes}>
+					<ul>
+						<{section name="j" loop=$attributes}>
+							<li><{$attributes[j].name}>: <{$attributes[j].val}></li>
+						<{/section}>
+					</ul>
+				<{/if}>
+			</li>
+		<{/section}>
+	</ul>
+	<br/>
+
+	<{assign var="voucher" value=$order->getVoucher()}>
+	<{if $voucher}>
+		<h3>Rabatkode</h3>
+		<p>Rabatkode: <{$voucher->getCode()|escape}></p>
+		<p>Rakat: <{$voucher->getPercentDiscount()|escape}> %</p>
+		<br/>
+	<{/if}>
+
+	<h3>Pris</h3>
+	<p><{$order->getTotalPrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}></p>
+	<small>(Moms <{$webshop->getCurrency()}> <{$order->getVat()|number_format:2:",":"."}>)</small>
+	<br/>
+	<br/>
+
+	<h3>Bestillingsadresse</h3>
+	<p><{$order->getOrderName()|escape}></p>
+	<p><{$order->getOrderAddress()|escape}></p>
+	<p><{$order->getOrderZipcode()|escape}> <{$order->getOrderCity()|escape}></p>
+	<p><{$order->getOrderCountry()|escape}></p>
+	<p><{$order->getPhone()|escape}></p>
+	<br/>
+
+	<h3>Leveringsadresse</h3>
+	<p><{$order->getDelName()|escape}></p>
+	<p><{$order->getDelAddress()|escape}></p>
+	<p><{$order->getDelZipcode()|escape}> <{$order->getDelCity()|escape}></p>
+	<p><{$order->getDelCountry()|escape}></p>
+
+	<h3>Kommentar</h3>
+	<p><{$order->getComments()|escape}></p>
+
+	<{if $order->getPickupAddress()}>
+		<h3>Du kan hente din pakke hos:</h3>
+		<p><{$order->getPickupAddress()|escape|nl2br}></p>
+	<{/if}>
+
+	<p>Gratis indpakning: <{$order->getExtras("Gratis_Gaveindpakning")}></p>
+
+	<{foreach from=$order->getExtras() item="value" key="key"}>
+		<p><small><{$key|escape}>: <{$value|escape}></small></p>
+	<{/foreach}>
+
+<{/if}>

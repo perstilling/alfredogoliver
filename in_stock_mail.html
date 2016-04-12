@@ -1,0 +1,13 @@
+<{if $subject}>
+
+	Vi har nu <{$product->getName()}> på lager igen
+
+<{else}>
+
+	<p>Hej,</p>
+
+	<p>Vi har nu <{$product->getName()|escape}> på lager igen, men kun en begrænset mængde, så skynd dig at bestil den i dag.</p>
+
+	<p>Du kan bestille den på <a href="<{$product->getRemoteUrl()|escape}>?utm_source=shoporama&utm_medium=email&utm_campaign=in_stock_email"><{$product->getUrl()|escape}></a></p>
+
+<{/if}>

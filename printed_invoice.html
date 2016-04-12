@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+
+<body>
+
+	<h1>Ordre <{$order->getWebshopOrderId()}></h1>
+
+	<{if $order->getVoucherCode()}>
+		<p><strong>Rabatkode:</strong> <code><{$order->getVoucherCode()|escape}></code> (<{$order->getVoucherDiscount()|escape}>)</p>
+	<{/if}>
+
+	<p><strong>Status:</strong> <{$order->getStatus()}></p>
+
+	<p><strong>Trackingnummer:</strong> <{$order->getTrackingNumber()}></p>
+
+	<h2>Ordreoplysninger</h2>
+
+	<h3>Varer</h3>
+
+	<{assign var="products" value=$order->getOrderProducts()}>
+
+	<ul>
+		<{section name="i" loop=$products}>
+			<li>
+				<strong><{$products[i]->getAmount()}> stk. <{$products[i]->getName()|escape}> til i alt <{$products[i]->getUnitPrice()|number_format:2:",":"."}> <{$webshop->getCurrency()|escape}></strong>
+
+				<{assign var="attributes" value=$products[i]->getAttributes()}>
+
+				<{if $attributes}>
+					<ul>
+						<{section name="k" loop=$attributes}>
+							<li><{$attributes[k].name}>: <{$attributes[k].val}></li>
+						<{/section}>
+					</ul>
+				<{/if}>
+				
+			</li>
+		<{/section}>
+	</ul>
+	
+	<br/>
+
+	<p><strong>Fragtpris:</strong> <{$order->getShippingPrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}></small></p>
+
+	<p><strong>Totalpris:</strong> <{$order->getTotalPrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}> <small>(Moms: kr. <{$order->getVat()|number_format:2:",":"."}>)</small></p>
+
+	<{assign var="shipping" value=$order->getShipping()}>
+	<{if $shipping}>
+		<h3>Leveringsmetode</h3>
+		<p><{$shipping->getName()|escape}></p>
+	<{/if}>
+
+	<p><strong>E-mail-address:</strong> <{$order->getEmail()|escape}></p>
+	<p><strong>Telefonnummer:</strong> <{$order->getPhone()|escape}></p>
+
+	<div>
+
+		<div style="width:50%; float:left;">
+			<h3>Bestillingsadresse</h3>
+			<p><{$order->getOrderName()|escape}></p>
+			<p><{$order->getOrderAddress()|escape}></p>
+			<p><{$order->getOrderZipcode()|escape}> <{$order->getOrderCity()|escape}></p>
+			<p><{$order->getOrderCountry()|escape}></p>
+		</div>
+
+		<div style="width:50%; float:left;">
+			<h3>Leveringsadresse</h3>
+			<p><{$order->getDelName()|escape}></p>
+			<p><{$order->getDelAddress()|escape}></p>
+			<p><{$order->getDelZipcode()|escape}> <{$order->getDelCity()|escape}></p>
+			<p><{$order->getDelCountry()|escape}></p>
+		</div>
+
+	</div>
+
+	<{if $order->getComments()|escape}>
+		<h3>Kommentar</h3>
+		<p><{$order->getComments()|escape}></p>
+	<{/if}>
+
+	<{capture name="e"}><{strip}>
+		<{foreach from=$order->getExtras() item="value" key="key"}>
+			<{if $value}>
+				<p><small><{$key|escape}>: <{$value|escape}></small></p>
+			<{/if}>
+		<{/foreach}>
+	<{/strip}><{/capture}>
+
+	<{if $smarty.capture.e}>
+		<h3>Ekstrafelter</h3>
+		<{$smarty.capture.e}>
+	<{/if}>
+
+	<div style="clear:both; page-break-after: always;"></div>
+
+</body>
+
+</html>

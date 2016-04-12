@@ -1,0 +1,31 @@
+<{capture name="title"}><{$category->getName()}><{/capture}>
+
+<h1><{$category->getName()|escape}></h1>
+
+<p><{$category->getDescriptionA()}></p>
+
+<{assign var="images" value=$category->getImages()}>
+<{if $images}>
+	<div class="pageimages">
+		<{section name="i" loop=$images}>
+			<a href="<{$images[i]->getSrc(800, 800, 'fit')}>" rel="lightbox"><img src="<{$images[i]->getSrc(50, 50, 'box')}>" alt="" <{$images[i]->getHtmlSize(50, 50, 'box')}>/></a>
+		<{/section}>
+	</div>
+	<div class="clear"></div>
+<{/if}>
+
+<div id="products">
+    <{section name="i" loop=$products}>
+        <{include file="inner_product.html" product=$products[i]}>
+    <{/section}>
+    <div class="clear"></div>
+</div>
+
+<p><small><{$category->getDescriptionB()}></small></p>
+
+<{if $pager}>
+	<{assign var="pages" value=$pager->render()}>
+	<{if $pages}>
+		<p class="pager" id="pager"><{$pages}></p>
+	<{/if}>
+<{/if}>

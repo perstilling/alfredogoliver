@@ -1,0 +1,68 @@
+            	<div class="one_col">
+                    <p class="breadcrumb"><span class="strong">Indkøbskurv</span> &nbsp;&rsaquo;&nbsp; Leveringsadresse &nbsp;&rsaquo;&nbsp; Betaling &nbsp;&rsaquo;&nbsp; Bekræftelse</p>
+                    <h1>Indkøbskurv</h1>
+                    <{if $get.s == "NaN"}>
+                        <p style="color:red;font-weight:bold;font-size:16px;">En eller flere varer er ikke på lager</p>
+                        <br/>
+                    <{/if}>
+                    <form action="" method="post" id="form">
+                    <table border="1" cellpadding="0" cellspacing="0" id="basket">
+                    	<tr height="38">
+                        	<td width="360" bgcolor="#f2f2f2" class="strong">Produkt</td>
+                            <td width="56" bgcolor="#f2f2f2" class="strong" align="right">Antal</td>
+                            <td width="119" bgcolor="#f2f2f2" class="strong" align="right">Stk. pris</td>
+                            <td width="120" bgcolor="#f2f2f2" class="strong" align="right">Subtotal</td>
+                        </tr>
+                        <{section name="i" loop=$basket}>
+                            <{assign var="product" value=$basket[i].product}>
+                            <tr height="38">
+                                <td width="360">
+                                	<{$product->getName()|escape}>
+                                	<{assign var="attributes" value=$basket[i].attributes}>
+									<{if $attributes}>
+                                    	<{foreach from=$attributes item=a}>
+                                        	 - <{$a.value|escape}>
+                                        <{/foreach}>
+                                    <{/if}>
+                                </td>
+                                <td width="56" align="right"><input type="text" name="amount[<{$basket[i].id}>]" value="<{$basket[i].amount}>" /></td>
+                                <td width="119" align="right"><{$product->getRealPrice(1, $basket[i].attributes)|number_format:2:",":"."}> <{$webshop->getCurrency()}></td>
+                                <td width="120" align="right"><{$product->getRealPrice($basket[i].amount, $basket[i].attributes)|number_format:2:",":"."}> <{$webshop->getCurrency()}></td>
+                            </tr>
+                        <{/section}>
+                    </table>
+                    <div id="two_col">
+                    	<div id="giftcard">
+                        	<input name="voucher" value="<{$voucher|escape}>" placeholder="Evt. gavekort" type="text" /><br />
+                            <button name="opdate" value="Opdater bestilling">Opdater</button>
+                        </div>
+                        <div id="continue">
+                        	<span class="strong">Pris:</span> <{$price|number_format:2:",":"."}> <{$webshop->getCurrency()}><br />
+                            <span class="strong">Fragt:</span> <{$shipping_price|number_format:2:",":"."}> <{$webshop->getCurrency()}><br />
+                            <span class="strong">Total:</span> <{$total_price|number_format:2:",":"."}> <{$webshop->getCurrency()}><br />
+                            <span>Moms udgør:</span> <{$vat|number_format:2:",":"."}> <{$webshop->getCurrency()}><br />
+                            <input type="submit" name="next" class="ok" value="Videre til næste step &nbsp;&rsaquo;">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+					<{if $get.wrong_voucher}>
+						Forkert rabatkode
+					<{/if}>
+
+                    <{if $voucher}>
+                
+                        <{if $voucher->getPercentDiscount()}>
+                            <p><small>Du sparer <strong><{$voucher->getPercentDiscount()}> %</strong></small></p>
+                        <{/if}>
+                
+                        <{if $voucher->getPriceDiscount()}>
+                            <p><small>Du sparer <strong><{$voucher->getPriceDiscount()}> <{$webshop->getCurrency()}></strong></small></p>
+                        <{/if}>
+                
+                        <{if $voucher->getFreeShipping()}>
+                            <p><small>Du sparer fragten</small></p>
+                        <{/if}>
+                
+                    <{/if}>
+                </div>

@@ -1,0 +1,11 @@
+<dl>
+	<{foreach from=$categories item="cat"}>
+		<{if $cat->getInMenu()}>
+			<dd>
+				<label><input <{if $get.categories && in_array($cat->getCategoryId(), $get.categories)}>checked="checked"<{/if}> type="checkbox" name="categories[]" value="<{$cat->getCategoryId()}>"/>
+				<small><{$cat->getName()|escape}></small></label>
+			</dd>
+		<{/if}>
+		<{include file="search_categories.html" categories=$cat->getChildren()}>
+	<{/foreach}>
+</dl>

@@ -1,0 +1,33 @@
+<{if $inc}>
+
+	<{include file=$inc}>
+
+<{elseif $category}>
+
+	<{if $category->isFront()}>
+	
+		<{include file="front.html" category=$category}>
+
+	<{else}>
+
+		<div class="products">
+			<{include file="category.html" category=$category}>
+		</div>
+
+	<{/if}>
+	
+<{elseif $landing_page}>
+
+	<div class="products">
+		<{include file="landing_page.html" landing_page=$landing_page}>
+	</div>	
+
+<{elseif $product}>
+
+	<{include file="product.html" product=$product}>
+
+<{elseif $page}>
+
+	<{include file="page.html" product=$page}>
+
+<{/if}>

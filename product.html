@@ -1,0 +1,66 @@
+<{capture name="title"}><{$product->getName()}><{/capture}>
+<{assign var="images" value=$product->getImages()}>
+            	<div id="two_col">
+                	<div id="product_image">
+                    	<{section name="j" loop=$images start=0 max=1}>
+                    		<a href="<{$images[j]->getSrc(800, 500, 'fit')}>" target="_blank" title="<{$images[j]->getDescription()|escape}>" style="background-color:white;" rel="lightbox"><img src="<{$images[j]->getSrc(358, 358, 'fit')}>" alt="<{$images[j]->getDescription()|escape}>" title="<{$images[j]->getDescription()|escape}>" class="productPic" border="0" <{$images[j]->getHtmlSize(358, 358, 'fit')}> /></a>
+                        <{/section}>
+                        <div id="thumbnails">
+                        	<{section name="j" loop=$images start=1}>
+                                <a href="<{$images[j]->getSrc(800, 500, 'fit')}>" target="_blank" title="<{$images[j]->getDescription()|escape}>" rel="lightbox"><img src="<{$images[j]->getSrc(72, 72, 'fit')}>" alt="<{$images[j]->getDescription()|escape}>" border="0" class="productPic thumbnail" title="<{$images[j]->getDescription()|escape}>" <{$images[j]->getHtmlSize(72, 72, 'fit')}> /></a>
+                            <{/section}>
+                        </div>
+                    </div>
+                    <div id="product_info">
+                    	<h1><{$product->getName()|escape}></h1>
+                        <{if $product->getOwnId()}>
+                            <p><small>Varenummer: <{$product->getOwnId()|escape}></small></p>
+                        <{/if}>
+                        <p class="largePrice">
+                            <{if $product->getSalePrice()}>
+                                Førpris: <del><{$product->getPrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}></del><br />
+
+                                Nu: ><{$product->getSalePrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}><br />
+
+                                Du sparer: <{$product->getSave()|number_format:2:",":"."}> <{$webshop->getCurrency()}> Det er <{$product->getPercentSave()|number_format:2}> %
+                            <{else}>
+                                Pris: <{$product->getRealPrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}>
+                            <{/if}>
+                        </p>
+                        <{if $product->getIsInStock()}>
+                        	<p style="color: green;"><small>
+                                <strong>På lager - </strong>
+                                <{if $product->getDeliveryTime()}>
+                                    Leveringstid: <{$product->getDeliveryTime()|escape}> dage
+                                <{/if}>
+                            </small></p>
+                        <{else}>
+                        	<p style="color: red;"><small>
+                                <strong>Ikke på lager - </strong>
+                                <{if $product->getDeliveryTimeNotInStock()}>
+                                    Leveringstid: <{$product->getDeliveryTimeNotInStock()|escape}> dage
+                                <{/if}>
+                            </small></p>
+
+							<{include file="out_of_stock_signup.html" product=$product}>
+
+                        <{/if}>
+                        <hr />
+                        <p><{$product->getParsedDescription()}></p>
+                        <hr />
+                        <{include file="add_to_basket.html" product=$product}>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <{include file="related_products.html" product=$product}>
+                <div class="clear"></div>
+			<script type="text/javascript">
+                $(document).ready(function() {
+                    setTimeout(function() {
+                        <{section name="j" loop=$images}>
+                            var img = new Image();
+                            img.src = '<{$images[j]->getSrc(800, 500, 'fit')}>';
+                        <{/section}>
+                    }, 1000);
+                });
+            </script>

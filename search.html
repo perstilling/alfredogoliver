@@ -1,0 +1,43 @@
+<{capture name="title"}><{$get.search}><{/capture}>
+
+<{capture name="side_menu"}>
+
+	<form action="<{$webshop->getUrl()|escape}>/search">
+		<dl>
+			<{assign var="categories" value=$webshop->getCategories()}>
+			<{foreach from=$categories item="cat"}>
+				<{if $cat->getInMenu()}>
+					<dd>
+						<label><input <{if $get.categories && in_array($cat->getCategoryId(), $get.categories)}>checked="checked"<{/if}> type="checkbox" name="categories[]" value="<{$cat->getCategoryId()}>"/><{$cat->getName()|escape}></label>
+					</dd>
+				<{/if}>
+				<{include file="search_categories.html" categories=$cat->getChildren()}>
+			<{/foreach}>
+		</dl>
+
+		<br/>
+
+		<input type="text" name="search" value="<{$get.search|escape}>" placeholder="Indtast søgeord"/>
+
+		<input type="submit" value="Søg"/>
+
+		<div class="clear"></div>
+
+	</form>
+
+<{/capture}>
+
+<{if $get.search}>
+	<h1>Søgning efter "<{$get.search|escape}>"</h1>
+<{else}>
+	<h1>Søgning</h1>
+<{/if}>
+
+<p>Resultater: <{$count}></p>
+
+<div id="products">
+    <{section name="i" loop=$products}>
+        <{include file="inner_product.html" product=$products[i]}>
+    <{/section}>
+    <div class="clear"></div>
+</div>

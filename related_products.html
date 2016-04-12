@@ -1,0 +1,41 @@
+<{assign var="related" value=$product->getRelatedProducts()}>
+<{if $related}>
+	<h1>Relaterede produkter:</h1>
+    <div id="products">
+    	<{section name="i" loop=$related}>
+		
+            <div class="product">
+	
+				<{assign var="image" value=$related[i]->getImage()}>
+				<{if $image}>
+                	<a href="<{$related[i]->getUrl()|escape}>"><img src="<{$image->getSrc(206, 206, 'box')|escape}>" class="productPic" border="0" <{$image->getHtmlSize(206, 206, 'box')|escape}> /></a>
+				<{/if}>
+				
+                <h2><a href="<{$related[i]->getUrl()|escape}>"><{$related[i]->getName()|escape}></a></h2>
+                <p class="smallPrice"><a href="<{$related[i]->getUrl()|escape}>"><{$related[i]->getPrice()|escape}> <{$webshop->getCurrency()}></a></p>
+            </div>
+        <{/section}>
+        <div class="clear"></div>
+    </div>
+<{/if}>
+
+<{assign var="also" value=$product->getAlsoBought()}>
+<{if $also}>
+	<h1>Personer der købte denne købte også:</h1>
+	<div id="products">
+		<{section name="i" loop=$also}>
+	
+	        <div class="product">
+
+				<{assign var="image" value=$also[i]->getImage()}>
+				<{if $image}>
+	            	<a href="<{$also[i]->getUrl()|escape}>"><img src="<{$image->getSrc(206, 206, 'box')|escape}>" class="productPic" border="0" <{$image->getHtmlSize(206, 206, 'box')|escape}> /></a>
+				<{/if}>
+			
+	            <h2><a href="<{$also[i]->getUrl()|escape}>"><{$also[i]->getName()|escape}></a></h2>
+	            <p class="smallPrice"><a href="<{$also[i]->getUrl()|escape}>"><{$also[i]->getPrice()|escape}> <{$webshop->getCurrency()}></a></p>
+	        </div>
+	    <{/section}>
+	    <div class="clear"></div>
+	</div>
+<{/if}>

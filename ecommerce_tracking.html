@@ -1,0 +1,55 @@
+<{if $webshop->getGaId() && $order}>
+
+	<{if !$order->getTrackingCalled()}>
+
+		<script type="text/javascript">
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', '<{$webshop->getGaId()}>']);
+		  _gaq.push(['_trackPageview']);
+
+		  _gaq.push(['_addTrans',
+		    '<{$order->getWebshopOrderId()}>',                       // order ID - required
+		    '<{$order->getOrderName()|escape:"javascript"}>',        // affiliation or store name
+		    '<{$order->getPrice()|number_format:2:".":""}>',         // total - required
+		    '<{$order->getVat()|number_format:2:".":""}>',           // tax
+		    '<{$order->getShippingPrice()|number_format:2:".":""}>', // shipping
+		    '<{$order->getDelCity()|escape:"javascript"}>',          // city
+		    '',                                                      // state or province
+		    ''                                                       // country
+		  ]);
+
+		  <{assign var="products" value=$order->getProducts()}>
+		  <{section name="i" loop=$products}>
+
+		  	var variation = [];
+
+		  	<{assign var="attributes" value=$products[i]->getAttributes()}>
+		  	<{if $attributes}>
+		  		<{section name="j" loop=$attributes}>
+		  			variation.push("<{$attributes[j].name|escape:"javascript"}>: <{$attributes[j].val|escape:"javascript"}>");
+		  		<{/section}>
+		  	<{/if}>
+
+		  	_gaq.push(['_addItem',
+		      '<{$order->getWebshopOrderId()}>',                         // order ID - required
+		      '<{$products[i]->getProductId()}>',                        // SKU/code - required
+		      '<{$products[i]->getName()|escape:"javascript"}>',         // product name
+		      variation.join("; "),                                      // category or variation
+		      '<{$products[i]->getUnitPrice()|number_format:2:".":""}>', // unit price - required
+		      '<{$products[i]->getAmount()|number_format:2:".":""}>'     // quantity - required
+		    ]);
+		    _gaq.push(['_trackTrans']); //submits transaction to the Analytics servers
+		  <{/section}>
+
+		  (function() {
+		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+		</script>
+
+		<{$order->setTrackingCalled()}>
+
+	<{/if}>
+
+<{/if}>

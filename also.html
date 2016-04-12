@@ -1,0 +1,91 @@
+<{if $product}>
+	<h2>Du lagde <{$product->getName()|escape}> i kurven</h2>
+
+	<div>
+
+		<div class="pct50">
+
+			<div>
+				<{assign var="image" value=$product->getImage()}>
+				<{if $image}>
+					<a href="<{$product->getUrl()|escape}>">
+						<img src="<{$image->getSrc(100, 100, 'fit')}>" alt="<{$image->getDescription()|escape}>" title="<{$image->getDescription()|escape}>" <{$image->getHtmlSize(100, 100, 'fit')}>/>
+					</a>
+				<{/if}>
+			</div>
+
+		</div>
+
+		<div class="pct50">
+			<p><a href="<{$webshop->getUrl()|escape}>/basket" class="buy_btn">Til kassen »</a></p>
+			<div style="clear:both;"></div>
+			<p><a href="<{$product->getUrl()|escape}>">« Tilbage</a></p>
+		</div>
+
+	</div>
+
+	<div class="clear"></div>
+
+	<{assign var="products" value=$product->getAlsoBought(3)}>
+	<{if $products}>
+		<div>
+			<h2>Andre der købte den købte også:</h2>
+				<{section name="i" loop=$products}>
+					<div class="pct25 center">
+						<{assign var="image" value=$products[i]->getImage()}>
+						<{if $image}>
+							<a href="<{$products[i]->getRemoteUrl()|escape}>"><img src="<{$image->getSrc(150, 150, 'fit')}>" alt="<{$image->getDescription()|escape}>" title="<{$image->getDescription()|escape}>" <{$image->getHtmlSize(150, 150, 'fit')}>/></a>
+						<{/if}>
+
+						<h3><a href="<{$products[i]->getRemoteUrl()|escape}>"><{$products[i]->getName()|escape}></a></h3>
+
+						<{if $products[i]->getSalePrice()}>
+							<p><a href="<{$products[i]->getRemoteUrl()|escape}>"><small>Førpris: <del><{$products[i]->getPrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}>.</del></small></a></p>
+							<p><a href="<{$products[i]->getRemoteUrl()|escape}>"><small>Nu: <{$products[i]->getSalePrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}>.</small></a></p>
+						<{else}>
+							<p><a href="<{$products[i]->getRemoteUrl()|escape}>"><small>Pris: <{$products[i]->getRealPrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}>.</small></a></p>
+						<{/if}>
+
+						<br/>
+
+						<p><strong><a href="<{$products[i]->getRemoteUrl()|escape}>">Gå til varen »</a></strong></p>
+
+					</div>
+				<{/section}>
+		</div>
+	<{/if}>
+
+	<div class="clear"></div>
+
+	<{assign var="products" value=$product->getRelatedProducts(3)}>
+	<{if $products}>
+		<div>
+			<h2>Relaterede varer:</h2>
+				<{section name="i" loop=$products}>
+					<div class="pct25 center">
+						<{assign var="image" value=$products[i]->getImage()}>
+						<{if $image}>
+							<a href="<{$products[i]->getRemoteUrl()|escape}>"><img src="<{$image->getSrc(150, 150, 'fit')}>" alt="<{$image->getDescription()|escape}>" title="<{$image->getDescription()|escape}>" <{$image->getHtmlSize(150, 150, 'fit')}>/></a>
+						<{/if}>
+
+						<h3><a href="<{$products[i]->getRemoteUrl()|escape}>"><{$products[i]->getName()|escape}></a></h3>
+
+						<{if $products[i]->getSalePrice()}>
+							<p><a href="<{$products[i]->getRemoteUrl()|escape}>"><small>Førpris: <del><{$products[i]->getPrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}>.</del></small></a></p>
+							<p><a href="<{$products[i]->getRemoteUrl()|escape}>"><small>Nu: <{$products[i]->getSalePrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}>.</small></a></p>
+						<{else}>
+							<p><a href="<{$products[i]->getRemoteUrl()|escape}>"><small>Pris: <{$products[i]->getRealPrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}>.</small></a></p>
+						<{/if}>
+
+						<br/>
+
+						<p><strong><a href="<{$products[i]->getRemoteUrl()|escape}>">Gå til varen »</a></strong></p>
+
+					</div>
+				<{/section}>
+		</div>
+	<{/if}>
+
+	<div class="clear"></div>
+
+<{/if}>

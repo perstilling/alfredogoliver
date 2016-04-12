@@ -1,0 +1,33 @@
+<div class="price">
+	<{if $product->getSalePrice()}>
+		<p>Førpris: <del><{$product->getPrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}>.</del></p>
+
+		<p>Nu: <strong><{$product->getSalePrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}>.</strong></p>
+
+		<p>Du sparer: <{$product->getSave()|number_format:2:",":"."}> <{$webshop->getCurrency()}>. Det er <{$product->getPercentSave()|number_format:2}> %</p>
+	<{else}>
+		<p><strong>Pris: <{$product->getRealPrice()|number_format:2:",":"."}> <{$webshop->getCurrency()}>.</strong></p>
+	<{/if}>
+
+	<{if $settings.price.show_vat == "yes"}>
+		<p><small>Moms: <{$product->getVat()|number_format:2:",":"."}> <{$webshop->getCurrency()}>.</small></p>
+	<{/if}>
+	
+	<{if $settings.price.show_shipping == "yes"}>
+		<p class="right"><small>Forventet fragt: <{$product->getApproxShipping()|number_format:2:",":"."}> <{$webshop->getCurrency()}>.</small></p>
+	<{/if}>
+
+	<p class="right clear"><small>
+		<{if $product->getIsInStock()}>
+			<strong>På lager</strong>
+			<{if $product->getDeliveryTime()}>
+				&middot; Leveringstid: <{$product->getDeliveryTime()|escape}>
+			<{/if}>
+		<{else}>
+			<strong><em>Ikke</em> på lager</strong>
+			<{if $product->getDeliveryTimeNotInStock()}>
+				&middot; Leveringstid: <{$product->getDeliveryTimeNotInStock()|escape}>
+			<{/if}>
+		<{/if}>
+	</small></p>
+</div>

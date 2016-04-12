@@ -1,0 +1,8 @@
+                <h1>Mest solgte varer:</h1>
+                <div id="products">
+                    <{assign var="products" value=$category->getOnlineProducts()}>
+                    <{section name="i" loop=$products}>
+                        <{include file="inner_product.html" product=$products[i]}>
+                    <{/section}>
+                    <div class="clear"></div>
+                </div>

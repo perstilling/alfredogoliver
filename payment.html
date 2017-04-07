@@ -80,7 +80,7 @@
 			<input type="submit" class="payment_button green" value="Betal"/>
 		</form>
 
-		<{elseif $payment_gateway_type == "quickpayv10"}>
+		<{elseif $webshop->getPaymentModule() == "quickpayv10"}>
 
 				<form action="https://payment.quickpay.net" method="post">
 					<{foreach from=$params key="key" item="value"}>

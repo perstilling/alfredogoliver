@@ -80,6 +80,15 @@
 			<input type="submit" class="payment_button green" value="Betal"/>
 		</form>
 
+		<{elseif $payment_gateway_type == "quickpayv10"}>
+
+				<form action="https://payment.quickpay.net" method="post">
+					<{foreach from=$params key="key" item="value"}>
+						<input type="hidden" name="<{$key}>" value="<{$value|escape}>" />
+					<{/foreach}>
+					<input type="submit" value="Betal" />
+				</form>
+		
 	<{/if}>
 
 <{/if}>
